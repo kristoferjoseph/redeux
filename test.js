@@ -50,6 +50,20 @@ module.exports = function() {
     )
   })
 
+  test('should populate with initial state', function() {
+    function app() {
+      return {}
+    }
+    function tasks() {
+      return []
+    }
+
+    assert.deepEqual(
+      redeux.store(tasks, app, {tasks:[1,2,3],app:{}}).getState(),
+      {app:{},tasks:[1,2,3]}
+    )
+  })
+
   test('redeux.store.subscribe', function() {
     assert.ok(redeux.store(function(action, state){}).subscribe, 'subscribe doesn\'t exist')
   })

@@ -1,16 +1,24 @@
-function store(/*reducers: things, stuff, etc.*/) {
-  if (!arguments.length) {
-    throw Error('store requires at least on reducer function with the signature: function(action, state) {}')
-  }
+function store(/*things, stuff, ..., initialState*/) {
   var state = {}
   var listeners = []
-  var reducers = Array.prototype.map.call(
+  var initialState
+  var reducers
+
+  if (typeof arguments[arguments.length - 1] === 'object') {
+    initialState = Array.prototype.pop.call(arguments)
+  }
+
+  reducers = Array.prototype.map.call(
     arguments,
     function(r) {
       state[r.name] = r()
       return r
     }
   )
+
+  if (initialState) {
+    state = Object.assign({}, state, initialState)
+  }
 
   function subscribe(listener) {
     //NOTE: for testing
