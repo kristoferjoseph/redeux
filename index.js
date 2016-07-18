@@ -55,7 +55,7 @@ function store(/*things, stuff, ..., initialState*/) {
       })
 
       listeners.forEach(function(l) {
-        l(state)
+        l(currentState)
       })
     }
     else {
