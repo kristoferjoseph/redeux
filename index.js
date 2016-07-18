@@ -1,4 +1,7 @@
 function store(/*things, stuff, ..., initialState*/) {
+  if (!arguments.length) {
+    throw Error('store requires at least one reducer with the signature: function(action, state) {} and can optionally be passed an initial state object as the last argument')
+  }
   var state = {}
   var listeners = []
   var initialState
