@@ -20,6 +20,11 @@ function store(/*things, stuff, ..., initialState*/) {
   )
 
   if (initialState) {
+    Object.keys(initialState).forEach(function(k) {
+      if (!state[k]) {
+        throw Error('initialState keys do not match reduced state keys.')
+      }
+    })
     state = Object.assign({}, state, initialState)
   }
 

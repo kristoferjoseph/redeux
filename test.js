@@ -64,6 +64,29 @@ module.exports = function() {
     )
   })
 
+  test('should error when initial state and reduced state do not match', function() {
+    function app() {
+      return {}
+    }
+    function tasks() {
+      return []
+    }
+
+    assert.throws(
+      function() {
+        redeux.store(
+          tasks,
+          app,
+          {
+            things: {},
+            tasks:[1,2,3],
+            app:{}
+          }
+        )
+      }
+      , Error)
+  })
+
   test('redeux.store.subscribe', function() {
     assert.ok(redeux.store(function(action, state){}).subscribe, 'subscribe doesn\'t exist')
   })
