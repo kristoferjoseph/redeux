@@ -1,6 +1,6 @@
 {
   "name": "redeux",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minimal data storage utility",
   "main": "index.js",
   "scripts": {
