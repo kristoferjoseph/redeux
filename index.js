@@ -23,7 +23,7 @@ function store(/*things, stuff, ..., initialState*/) {
     Object.keys(initialState)
       .forEach(
         function(k) {
-          if (!state[k]) {
+          if (!state.hasOwnProperty(k)) {
             throw Error('initialState keys do not match reduced state keys.')
           }
         }
