@@ -1,9 +1,10 @@
 # ✨redeux✨
 Minimal unidirectional data flow utility library.
 
-- Written in plain ol JavaScript so **no transpile needed**.⚡️
+- Written in plain ol JavaScript so **no transpile needed**⚡️
 - Under 1k minified💥
-- Legible source code, for humans, so you can read it, with your eyes 👀.
+- No dependendencies🌟
+- Legible source code, for humans, so you can read it, with your eyes 👀
 - Simple api of three methods:
       - store :returns:
           - subscribe :returns:
