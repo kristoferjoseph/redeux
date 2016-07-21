@@ -1,6 +1,6 @@
 {
   "name": "redeux",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Minimal unidirectional data flow utility",
   "main": "index.js",
   "scripts": {
