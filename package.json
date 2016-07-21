@@ -1,10 +1,11 @@
 {
   "name": "redeux",
   "version": "1.0.3",
-  "description": "Minimal data storage utility",
+  "description": "Minimal unidirectional data flow utility",
   "main": "index.js",
   "scripts": {
-    "test": "node ./test.js"
+    "test": "node ./test.js",
+    "dist": "browserify ./index.js | uglifyjs --compress --mangle --screw-ie8 > redeux.min.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +24,8 @@
     "url": "https://github.com/kristoferjoseph/redeux/issues"
   },
   "homepage": "https://github.com/kristoferjoseph/redeux#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "uglify-js": "^2.7.0"
+  }
 }

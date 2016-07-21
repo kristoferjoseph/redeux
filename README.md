@@ -2,7 +2,7 @@
 Minimal unidirectional data flow utility library.
 
 - Written in plain ol JavaScript so **no transpile needed**⚡️
-- Under 1k minified💥
+- Under 2k minified💥
 - No dependencies🌟
 - Legible source code, for humans, so you can read it, with your eyes 👀
 - Simple api of three methods:
@@ -52,7 +52,7 @@ function todos(action, state) {
 }
 
 function update(state) {
-  console.log(store.getState()) //{todos[0,1]}
+  console.log(state) //{todos[0,1]}
 }
 ```
 
