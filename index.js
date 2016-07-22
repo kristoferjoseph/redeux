@@ -67,7 +67,7 @@ function store(/*things, stuff, ..., initialState*/) {
       })
     }
     else {
-      throw Error('action has the required singature: {type:"string"}')
+      throw Error('action has the required signature: {type:"string"}')
     }
   }
 
