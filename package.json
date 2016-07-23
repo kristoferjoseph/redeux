@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./test.js",
-    "dist": "browserify ./index.js | uglifyjs --compress --mangle --screw-ie8 > redeux.min.js"
+    "dist": "browserify ./index.js --standalone redeux | uglifyjs --compress --mangle --screw-ie8 > redeux.min.js"
   },
   "repository": {
     "type": "git",
