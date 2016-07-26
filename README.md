@@ -18,7 +18,7 @@ Minimal unidirectional data flow utility library.
 
 #####OR
 
-`<script src="redeux.umd.js"></script>`
+[`<script src="redeux.umd.js"></script>`](https://github.com/kristoferjoseph/redeux/blob/master/example.html)
 
 ## Usage
 
