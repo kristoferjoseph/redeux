@@ -16,6 +16,10 @@ Minimal unidirectional data flow utility library.
 
 `npm i redeux --save`
 
+#####OR
+
+`<script src="redeux.umd.js"></script>`
+
 ## Usage
 
 #### Simplest working example
