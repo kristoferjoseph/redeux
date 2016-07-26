@@ -4,16 +4,25 @@
   <meta charset="UTF-8">
   <title>✨redeux✨</title>
   <script src="./redeux.umd.js"></script>
+  <style>
+    body {
+      padding: 3rem;
+      font-family: sans-serif;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <div id="root"></div>
   <script>
     (function(){
-     var store = window.redeux.store(todos)
-     function todos(action, state) {
-       return ['YOLO']
-     }
-     console.log(store.getState())
+       var root = document.getElementById('root')
+       store = window.redeux.store(todos)
+       function todos(action, state) {
+         return ['YOLO']
+       }
+       console.log(store.getState())
+       root.innerHTML = `<h1>${store.getState().todos[0]}</h1>`
      }())
   </script>
 </body>
