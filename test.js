@@ -32,10 +32,6 @@ module.exports = function() {
     assert(redeux, 'redeux doesn\'t exist')
   })
 
-  test('redeux.store', function() {
-    assert(redeux.store, 'redeux store doesn\'t exist')
-  })
-
   test('should be the combination of many reducers', function() {
     function app() {
       return {}
@@ -45,7 +41,7 @@ module.exports = function() {
     }
 
     assert.deepEqual(
-      redeux.store(tasks, app).getState(),
+      redeux(tasks, app).getState(),
       {app:{},tasks:[]}
     )
   })
@@ -59,7 +55,7 @@ module.exports = function() {
     }
 
     assert.deepEqual(
-      redeux.store(tasks, app, {tasks:[1,2,3],app:{}}).getState(),
+      redeux(tasks, app, {tasks:[1,2,3],app:{}}).getState(),
       {app:{},tasks:[1,2,3]}
     )
   })
@@ -74,7 +70,7 @@ module.exports = function() {
 
     assert.throws(
       function() {
-        redeux.store(
+        redeux(
           tasks,
           app,
           {
@@ -87,27 +83,27 @@ module.exports = function() {
       , Error)
   })
 
-  test('redeux.store.subscribe', function() {
-    assert.ok(redeux.store(function(action, state){}).subscribe, 'subscribe doesn\'t exist')
+  test('redeux.subscribe', function() {
+    assert.ok(redeux(function(action, state){}).subscribe, 'subscribe doesn\'t exist')
   })
 
   test('should subscribe listener', function() {
     var a = function a() {}
     var listeners = []
-    redeux.store(function(action, state){}).subscribe(a, listeners)
+    redeux(function(action, state){}).subscribe(a, listeners)
     assert.equal(listeners[0], a)
   })
 
   test('should unsubscribe listener', function() {
     var b = function b() {}
     var listeners = []
-    var unsubscribe = redeux.store(function(action, state){}).subscribe(b, listeners)
+    var unsubscribe = redeux(function(action, state){}).subscribe(b, listeners)
     unsubscribe(b)
     assert(listeners.length === 0)
   })
 
-  test('redeux.store.dispatch', function() {
-    assert(redeux.store(function(action, state){}).dispatch)
+  test('redeux.dispatch', function() {
+    assert(redeux(function(action, state){}).dispatch)
   })
 
   test('should call reducers', function() {
@@ -122,7 +118,7 @@ module.exports = function() {
       type: 'YOLO'
     }
 
-    var store = redeux.store(tasks)
+    var store = redeux(tasks)
     store.dispatch(action, store.getState())
     assert.deepEqual(store.getState(), {tasks:[1,2,3]})
   })
@@ -149,7 +145,7 @@ module.exports = function() {
       data: 4
     }
 
-    var store = redeux.store(tasks)
+    var store = redeux(tasks)
     store.subscribe(ear)
     store.dispatch(action)
     assert.deepEqual(

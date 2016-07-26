@@ -6,11 +6,9 @@ Minimal unidirectional data flow utility library.
 - No dependencies🌟
 - Legible source code, for humans, so you can read it, with your eyes 👀
 - Simple api of three methods:
-      - store :returns:
-          - subscribe :returns:
-              - unsubscribe
-          - dispatch
-          - getState
+    - subscribe/unsubscribe
+    - dispatch
+    - getState
 
 ## Install
 
@@ -25,7 +23,7 @@ Minimal unidirectional data flow utility library.
 #### Simplest working example
 
 ```js
-var createStore = require('redeux').store
+var createStore = require('redeux')
 var store = createStore(todos)
 
 function todos() {
@@ -38,7 +36,7 @@ console.log(store.getState()) //{ todos: [] }
 #### Subscribing to updates
 
 ```js
-var createStore = require('redeux').store
+var createStore = require('redeux')
 var counter = 0
 var initialState = {todos: [counter]}
 var store = createStore(todos, initialState)
