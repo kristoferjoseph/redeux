@@ -72,15 +72,7 @@ module.exports = function store(/*things, stuff, ..., initialState*/) {
   }
 
   function getState() {
-    if (Array.isArray(state)) {
-      return state.slice()
-    }
-    else if (typeof state === 'object') {
-      return Object.assign({}, state)
-    }
-    else {
-      return state
-    }
+    return Object.assign({}, state)
   }
 
   return {
