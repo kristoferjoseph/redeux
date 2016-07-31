@@ -56,14 +56,17 @@ module.exports = function store(/*things, stuff, ..., initialState*/) {
   }
 
   function dispatch(action) {
+    var currentState
+    var newState
     if (action && typeof action.type === 'string') {
-      var currentState = getState()
+      currentState = getState()
       reducers.forEach(function(r) {
         state[r.name] = r(action, currentState[r.name])
       })
 
+      newState = getState()
       listeners.forEach(function(l) {
-        l(getState())
+        l(newState)
       })
     }
     else {
