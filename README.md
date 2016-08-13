@@ -24,7 +24,7 @@ Minimal unidirectional data flow utility library.
 
 ```js
 var createStore = require('redeux')
-var store = createStore(todos)
+var store       = createStore(todos)
 
 function todos() {
   return []
@@ -36,11 +36,12 @@ console.log(store.getState()) //{ todos: [] }
 #### Subscribing to updates
 
 ```js
-var createStore = require('redeux')
-var counter = 0
+var createStore  = require('redeux')
+var counter      = 0
 var initialState = {todos: [counter]}
-var store = createStore(todos, initialState)
-var unsubscribe = store.subscribe(update)
+var store        = createStore(todos, initialState)
+var unsubscribe  = store.subscribe(update)
+
 store.dispatch({type:'add'})
 unsubscribe(update)
 
