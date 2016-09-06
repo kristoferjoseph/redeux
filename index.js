@@ -14,6 +14,7 @@ module.exports = function store(/*things, stuff, ..., initialState*/) {
   reducers = Array.prototype.map.call(
     arguments,
     function(r) {
+      if (!r) { return }
       state[r.name] = r()
       return r
     }
@@ -32,11 +33,6 @@ module.exports = function store(/*things, stuff, ..., initialState*/) {
   }
 
   function subscribe(listener) {
-    //NOTE: for testing
-    if (arguments.length > 1) {
-      listeners = arguments[1]
-    }
-
     if (typeof listener === 'function') {
       listeners.push(listener)
       return unsubscribe

@@ -83,23 +83,12 @@ module.exports = function() {
       , Error)
   })
 
+  test('redeux should handle undefined reducers/initial state gracefully', function() {
+    assert.ok(redeux(undefined))
+  })
+
   test('redeux.subscribe', function() {
     assert.ok(redeux(function(action, state){}).subscribe, 'subscribe doesn\'t exist')
-  })
-
-  test('should subscribe listener', function() {
-    var a = function a() {}
-    var listeners = []
-    redeux(function(action, state){}).subscribe(a, listeners)
-    assert.equal(listeners[0], a)
-  })
-
-  test('should unsubscribe listener', function() {
-    var b = function b() {}
-    var listeners = []
-    var unsubscribe = redeux(function(action, state){}).subscribe(b, listeners)
-    unsubscribe(b)
-    assert(listeners.length === 0)
   })
 
   test('redeux.dispatch', function() {
