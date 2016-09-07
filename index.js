@@ -16,7 +16,7 @@ module.exports = function store(/*things, stuff, ..., initialState*/) {
     function(r) {
       if (!r) { return }
       if (initialState) {
-        if (initialState[r.name]) {
+        if (initialState.hasOwnProperty(r.name)) {
           state[r.name] = r(initialState[r.name])
         }
         else {
