@@ -47,11 +47,11 @@ module.exports = function() {
   })
 
   test('should populate with initial state', function() {
-    function app() {
-      return {}
+    function app(state, action) {
+      return state || {}
     }
-    function tasks() {
-      return []
+    function tasks(state, action) {
+      return state || []
     }
 
     assert.deepEqual(
@@ -67,14 +67,17 @@ module.exports = function() {
     function tasks() {
       return []
     }
+    function things() {
+      return {}
+    }
 
     assert.throws(
       function() {
         redeux(
+          things,
           tasks,
           app,
           {
-            things: {},
             tasks:[1,2,3],
             app:{}
           }

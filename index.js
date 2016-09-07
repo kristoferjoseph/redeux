@@ -15,22 +15,20 @@ module.exports = function store(/*things, stuff, ..., initialState*/) {
     arguments,
     function(r) {
       if (!r) { return }
-      state[r.name] = r()
+      if (initialState) {
+        if (initialState[r.name]) {
+          state[r.name] = r(initialState[r.name])
+        }
+        else {
+          throw Error('initialState keys do not match reduced state keys.')
+        }
+      }
+      else {
+        state[r.name] = r()
+      }
       return r
     }
   )
-
-  if (initialState) {
-    Object.keys(initialState)
-      .forEach(
-        function(k) {
-          if (!state.hasOwnProperty(k)) {
-            throw Error('initialState keys do not match reduced state keys.')
-          }
-        }
-      )
-    state = Object.assign({}, state, initialState)
-  }
 
   function subscribe(listener) {
     if (typeof listener === 'function') {
