@@ -17,7 +17,7 @@ module.exports = function store(/*things, stuff, ..., initialState*/) {
       if (!r) { return }
       if (initialState) {
         if (initialState.hasOwnProperty(r.name)) {
-          state[r.name] = r(null, initialState[r.name])
+          state[r.name] = r(initialState[r.name])
         }
         else {
           throw Error('initialState keys do not match reduced state keys.')
@@ -55,7 +55,7 @@ module.exports = function store(/*things, stuff, ..., initialState*/) {
     if (action && typeof action.type === 'string') {
       currentState = getState()
       reducers.forEach(function(r) {
-        state[r.name] = r(action, currentState[r.name])
+        state[r.name] = r(currentState[r.name], action)
       })
 
       newState = getState()

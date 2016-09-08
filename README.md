@@ -45,7 +45,7 @@ var unsubscribe  = store.subscribe(update)
 store.dispatch({type:'add'})
 unsubscribe(update)
 
-function todos(action, state) {
+function todos(state, action) {
   var type = action && action.type
   if (type === 'add') {
     state.push(counter + 1)

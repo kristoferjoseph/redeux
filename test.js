@@ -47,10 +47,10 @@ module.exports = function() {
   })
 
   test('should populate with initial state', function() {
-    function app(action, state) {
+    function app(state, action) {
       return state || {}
     }
-    function tasks(action, state) {
+    function tasks(state, action) {
       return state || []
     }
 
@@ -91,15 +91,15 @@ module.exports = function() {
   })
 
   test('redeux.subscribe', function() {
-    assert.ok(redeux(function(action, state){}).subscribe, 'subscribe doesn\'t exist')
+    assert.ok(redeux(function(state, action){}).subscribe, 'subscribe doesn\'t exist')
   })
 
   test('redeux.dispatch', function() {
-    assert(redeux(function(action, state){}).dispatch)
+    assert(redeux(function(state, action){}).dispatch)
   })
 
   test('should call reducers', function() {
-    function tasks(action, state) {
+    function tasks(state, action) {
       if (action === 'YOLO') {
         assert(true, action)
       }
@@ -111,7 +111,7 @@ module.exports = function() {
     }
 
     var store = redeux(tasks)
-    store.dispatch(action, store.getState())
+    store.dispatch(action)
     assert.deepEqual(store.getState(), {tasks:[1,2,3]})
   })
 
@@ -120,7 +120,7 @@ module.exports = function() {
       assert.deepEqual(state, {tasks:[1,2,3,4]})
     }
 
-    function tasks(action, state) {
+    function tasks(state, action) {
       var type = action && action.type || ''
       var data = action && action.data
       if (type === 'ADD') {
