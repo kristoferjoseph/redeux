@@ -47,10 +47,10 @@ module.exports = function() {
   })
 
   test('should populate with initial state', function() {
-    function app(state, action) {
+    function app(action, state) {
       return state || {}
     }
-    function tasks(state, action) {
+    function tasks(action, state) {
       return state || []
     }
 
