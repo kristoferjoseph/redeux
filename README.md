@@ -3,7 +3,6 @@ Minimal unidirectional data flow utility library.
 
 - Written in plain ol JavaScript so **no transpile needed**⚡️
 - Under 2k minified💥
-- No dependencies🌟
 - Legible source code, for humans, so you can read it, with your eyes 👀
 - Simple api of three methods:
     - subscribe/unsubscribe
