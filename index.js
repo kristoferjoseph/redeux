@@ -35,7 +35,7 @@ module.exports = function Store () {
   }
 
   function dispatch (action) {
-    if (action && typeof action.type === 'string') {
+    if (action && typeof action.type !== 'string') {
       console.error('action object is missing the type property')
     }
 
