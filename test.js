@@ -60,32 +60,6 @@ module.exports = function() {
     )
   })
 
-  test('should error when initial state and reduced state do not match', function() {
-    function app() {
-      return {}
-    }
-    function tasks() {
-      return []
-    }
-    function things() {
-      return {}
-    }
-
-    assert.throws(
-      function() {
-        redeux(
-          things,
-          tasks,
-          app,
-          {
-            tasks:[1,2,3],
-            app:{}
-          }
-        )
-      }
-      , Error)
-  })
-
   test('redeux should handle undefined reducers/initial state gracefully', function() {
     assert.ok(redeux(undefined))
   })
