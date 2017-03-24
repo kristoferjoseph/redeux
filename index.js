@@ -11,12 +11,13 @@ module.exports = function Store () {
   reducers = Array.prototype.map.call(
     arguments,
     function (r) {
-      if (!r) { return }
+      if (!r) {
+        return
+      }
       if (initialState) {
         if (!initialState.hasOwnProperty(r.name)) {
-          console.warn('Initial state does not have a key for '  + r.name)
+          console.warn('initialState.' + r.name + ' is missing.')
         }
-
         state[r.name] = r(initialState[r.name])
       } else {
         state[r.name] = r()
@@ -36,15 +37,13 @@ module.exports = function Store () {
 
   function dispatch (action) {
     if (action && typeof action.type !== 'string') {
-      console.error('action object is missing the type property')
+      console.error('action.type must be a "string"')
     }
-
     var currentState = getState()
     currentState = getState()
     reducers.forEach(function (r) {
       state[r.name] = r(currentState[r.name], action)
     })
-
     listeners.forEach(function (l) {
       l(state)
     })
