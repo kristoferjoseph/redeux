@@ -17,8 +17,8 @@
   <script>
     (function(){
        var root = document.getElementById('root')
-       store = window.redeux.store(todos)
-       function todos(action, state) {
+       store = window.redeux(todos)
+       function todos(state, action) {
          return ['YOLO']
        }
        console.log(store.getState())

@@ -1,4 +1,4 @@
-module.exports = function Store () {
+module.exports = function store () {
   var state = {}
   var listeners = []
   var initialState
