@@ -40,7 +40,6 @@ module.exports = function store () {
       console.error('action.type must be a "string"')
     }
     var currentState = getState()
-    currentState = getState()
     reducers.forEach(function (r) {
       state[r.name] = r(currentState[r.name], action)
     })
