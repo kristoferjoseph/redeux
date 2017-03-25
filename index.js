@@ -49,7 +49,7 @@ module.exports = function store () {
   }
 
   function getState () {
-    return state
+    return Object.assign({}, state)
   }
 
   return {
