@@ -20,34 +20,28 @@ module.exports = function store () {
     }
   )
 
-  function subscribe (listener) {
-    listeners.push(listener)
-    return unsubscribe
-  }
-
   function unsubscribe (listener) {
     return listeners.splice(listeners.indexOf(listener), 1)
   }
 
-  function dispatch (action) {
-    action &&
-      'string' !== typeof action.type &&
-      console.error('action.type must be a "string"')
-    reducers.forEach(function (r) {
-      state[r.name] = r(state[r.name], action)
-    })
-    listeners.forEach(function (l) {
-      l(state)
-    })
-  }
-
-  function getState () {
-    return Object.assign({}, state)
-  }
-
   return {
-    subscribe: subscribe,
-    dispatch: dispatch,
-    getState: getState
+    subscribe: function subscribe (listener) {
+      listeners.push(listener)
+      return unsubscribe
+    },
+    dispatch: function dispatch (action) {
+      action &&
+        'string' !== typeof action.type &&
+        console.error('action.type must be a "string"')
+      reducers.forEach(function (r) {
+        state[r.name] = r(state[r.name], action)
+      })
+      listeners.forEach(function (l) {
+        l(state)
+      })
+    },
+    getState: function getState () {
+      return Object.assign({}, state)
+    }
   }
 }
