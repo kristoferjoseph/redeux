@@ -1,6 +1,7 @@
-module.exports = function store () {
+module.exports = function redeux () {
   var state = {}
   var listeners = []
+  var name = ''
   var initialState
   var reducers
 
@@ -11,37 +12,41 @@ module.exports = function store () {
     arguments,
     function (r) {
       if (r) {
+        name = r.name
         return initialState ?
-          (initialState.hasOwnProperty(r.name) ||
-            console.warn('initialState.' + r.name + ' is missing.'),
-            state[r.name] = r(initialState[r.name])) :
-            state[r.name] = r(), r
+          (initialState.hasOwnProperty(name) ||
+            console.warn('initialState.' + name + ' is missing.'),
+            state[name] = r(initialState[name])) :
+          state[name] = r(), r
       }
     }
   )
+
+  function store () {
+    return Object.assign({}, state)
+  }
+
+  store.subscribe = function subscribe (listener) {
+    listeners.push(listener)
+    return unsubscribe
+  }
 
   function unsubscribe (listener) {
     return listeners.splice(listeners.indexOf(listener), 1)
   }
 
-  return {
-    subscribe: function subscribe (listener) {
-      listeners.push(listener)
-      return unsubscribe
-    },
-    dispatch: function dispatch (action) {
-      action &&
-        'string' !== typeof action.type &&
+  store.dispatch = function dispatch (action) {
+    action &&
+      'string' !== typeof action.type &&
         console.error('action.type must be a "string"')
-      reducers.forEach(function (r) {
-        state[r.name] = r(state[r.name], action)
-      })
-      listeners.forEach(function (l) {
-        l(state)
-      })
-    },
-    getState: function getState () {
-      return Object.assign({}, state)
-    }
+    reducers.forEach(function (r) {
+      name = r.name
+      state[name] = r(state[name], action)
+    })
+    listeners.forEach(function (l) {
+      l(state)
+    })
   }
+
+  return store
 }

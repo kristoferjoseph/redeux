@@ -41,7 +41,7 @@ module.exports = function() {
     }
 
     assert.deepEqual(
-      redeux(tasks, app).getState(),
+      redeux(tasks, app)(),
       {app:{},tasks:[]}
     )
   })
@@ -55,7 +55,7 @@ module.exports = function() {
     }
 
     assert.deepEqual(
-      redeux(tasks, app, {tasks:[1,2,3],app:{}}).getState(),
+      redeux(tasks, app, {tasks:[1,2,3],app:{}})(),
       {app:{},tasks:[1,2,3]}
     )
   })
@@ -86,7 +86,7 @@ module.exports = function() {
 
     var store = redeux(tasks)
     store.dispatch(action)
-    assert.deepEqual(store.getState(), {tasks:[1,2,3]})
+    assert.deepEqual(store(), {tasks:[1,2,3]})
   })
 
   test('should call listeners', function(){
@@ -116,7 +116,7 @@ module.exports = function() {
     store.dispatch(action)
     assert.deepEqual(
       {tasks:[1,2,3,4]},
-      store.getState()
+      store()
     )
   })
 
