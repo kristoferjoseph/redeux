@@ -15,8 +15,8 @@ module.exports = function redeux () {
         name = r.name
         return initialState ?
           (initialState.hasOwnProperty(name) ||
-            console.warn('initialState.' + name + ' is missing.'),
-            state[name] = r(initialState[name])) :
+          console.warn('initialState.' + name + ' is missing.'),
+          state[name] = r(initialState[name])) :
           state[name] = r(), r
       }
     }
