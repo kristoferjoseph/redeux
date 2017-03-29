@@ -60,7 +60,7 @@ function update(state) {
 #### Immutable work flow
 
 The following is the recommended way to write reducers for redeux.
-Every time you mutate ( or __change_ for us lowly non cs majors ) the state make a copy first. This allows your code to check for changes by doing an equality check on the reducer's value.
+Every time you mutate ( or *change* for us lowly non cs majors ) the state make a copy first. This allows your code to check for changes by doing an equality check on the reducer's value.
 
 ```js
 var createStore = require('redeux')
