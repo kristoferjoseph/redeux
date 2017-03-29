@@ -99,7 +99,7 @@ This allows you to return a copied, frozen, whatever version for use during test
 This approach is useful when wanting to make sure that no consuming code can mutate the shared state.
 This approach does accrue a small performance hit since each read will create a copy so use it wisely.
 
-```
+```js
 var createStore = require('redeux')
 var store = createStore(function todos (state, action) {return state})
 function copy (state) {
@@ -119,7 +119,7 @@ This approach is useful when trying to track down if any cosuming code is accide
 When using this approach any accidental mutations will throw an error.
 This should only be done in development because it accrues a large performance hit and is only really useful for debugging.
 
-```
+```js
 var createStore = require('redeux')
 var store = createStore(function todos (state, action) {return state})
 var freeze = require('deep-freeze')
