@@ -21,8 +21,8 @@
        function todos(state, action) {
          return ['✨redeux✨']
        }
-       console.log(store.getState())
-       root.innerHTML = `<h1>${store.getState().todos[0]}</h1>`
+       console.log(store())
+       root.innerHTML = `<h1>${store().todos[0]}</h1>`
      }())
   </script>
 </body>

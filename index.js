@@ -1,12 +1,12 @@
 module.exports = function redeux () {
-  var state = {}
-  var listeners = []
-  var name = ''
-  var initialState
-  var reducers
+  var state = {},
+    listeners = [],
+    name = '',
+    initialState,
+    reducers
 
   'object' === typeof arguments[arguments.length - 1] &&
-    (initialState = Array.prototype.pop.call(arguments))
+   (initialState = Array.prototype.pop.call(arguments))
 
   reducers = Array.prototype.map.call(
     arguments,
@@ -22,13 +22,14 @@ module.exports = function redeux () {
     }
   )
 
-  function store () {
-    return Object.assign({}, state)
+  function store (func) {
+    return func ? func(state) : state
   }
 
   store.subscribe = function subscribe (listener) {
-    listeners.push(listener)
-    return unsubscribe
+    return 'function' === typeof listener ?
+      (listeners.push(listener), unsubscribe) :
+      console.error('listener must be a function')
   }
 
   function unsubscribe (listener) {
@@ -36,15 +37,17 @@ module.exports = function redeux () {
   }
 
   store.dispatch = function dispatch (action) {
+    var update
     action &&
-      'string' !== typeof action.type &&
-        console.error('action.type must be a "string"')
+    'string' !== typeof action.type &&
+    console.error('action.type must be a "string"')
     reducers.forEach(function (r) {
       name = r.name
       state[name] = r(state[name], action)
     })
+    update = store()
     listeners.forEach(function (l) {
-      l(state)
+      l(update)
     })
   }
 

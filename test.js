@@ -32,7 +32,7 @@ module.exports = function() {
     assert(redeux, 'redeux doesn\'t exist')
   })
 
-  test('should be the combination of many reducers', function() {
+  test('  should be the combination of many reducers', function() {
     function app() {
       return {}
     }
@@ -46,7 +46,7 @@ module.exports = function() {
     )
   })
 
-  test('should populate with initial state', function() {
+  test('  should populate with initial state', function() {
     function app(state, action) {
       return state || {}
     }
@@ -60,7 +60,7 @@ module.exports = function() {
     )
   })
 
-  test('redeux should handle undefined reducers/initial state gracefully', function() {
+  test('  should handle undefined reducers/initial state gracefully', function() {
     assert.ok(redeux(undefined))
   })
 
@@ -68,11 +68,17 @@ module.exports = function() {
     assert.ok(redeux(function(state, action){}).subscribe, 'subscribe doesn\'t exist')
   })
 
+  test('  should return unsubscribe', function () {
+    assert.equal(
+      redeux(function () {})
+        .subscribe(function () {}).name, 'unsubscribe')
+  })
+
   test('redeux.dispatch', function() {
     assert(redeux(function(state, action){}).dispatch)
   })
 
-  test('should call reducers', function() {
+  test('  should call reducers', function() {
     function tasks(state, action) {
       if (action === 'YOLO') {
         assert(true, action)
@@ -89,7 +95,7 @@ module.exports = function() {
     assert.deepEqual(store(), {tasks:[1,2,3]})
   })
 
-  test('should call listeners', function(){
+  test('  should call listeners', function(){
     function ear(state) {
       assert.deepEqual(state, {tasks:[1,2,3,4]})
     }
@@ -118,6 +124,50 @@ module.exports = function() {
       {tasks:[1,2,3,4]},
       store()
     )
+  })
+
+  test('  should not mutate by default', function () {
+    function tasks (state, action) {
+      return state
+    }
+
+    var store = redeux(tasks)
+    var state = store()
+    store.dispatch({type:'mutated?'})
+    assert.strictEqual(state, store())
+    assert.strictEqual(store().tasks, tasks())
+  })
+
+  test('  should enable immutable state', function () {
+    function tasks (state, action) {
+      return state
+    }
+
+    var store = redeux(tasks)
+    var state = store(function (s) { return Object.assign({}, s)})
+    assert.notEqual(state, store())
+  })
+
+  test('  should enable shouldUpdate', function () {
+    function tasks (state, action) {
+      var type = action && action.type || ''
+      var data = action && action.data
+      var newState
+      if (type === 'ADD') {
+        newState = state.slice()
+        newState.push(data)
+        return newState
+      }
+
+      return state
+    }
+
+    var store = redeux(tasks, {tasks:[1,2,3]})
+    var state = store()
+    store.dispatch({type:'ADD', data:4})
+    assert.strictEqual(state, store())
+    assert.notStrictEqual(store().tasks, tasks())
+    assert.deepEqual(store().tasks, [1,2,3,4])
   })
 
 }()
