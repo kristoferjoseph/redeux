@@ -5,8 +5,8 @@ module.exports = function redeux () {
   var initialState
   var reducers
 
-  'object' === typeof arguments[arguments.length - 1] &&
-   (initialState = Array.prototype.pop.call(arguments))
+  ('object' === typeof arguments[arguments.length - 1]) &&
+  (initialState = Array.prototype.pop.call(arguments))
 
   reducers = Array.prototype.map.call(
     arguments,
