@@ -1,9 +1,9 @@
 module.exports = function redeux () {
-  var state = {},
-    listeners = [],
-    name = '',
-    initialState,
-    reducers
+  var state = {}
+  var listeners = []
+  var name = ''
+  var initialState
+  var reducers
 
   'object' === typeof arguments[arguments.length - 1] &&
    (initialState = Array.prototype.pop.call(arguments))

@@ -21,8 +21,8 @@ function todos (state, action) {
 function update (state) {
   // Switch wich read is commented out
   //  and run `node benchmark.js` again to see the difference in performance
-  //var data = store()
-  var data = store(function (s) { return Object.assign(s)})
+  var data = store()
+  //var data = store(function (s) { return Object.assign(s)})
 }
 
 unsubscribe = store.subscribe(update)
