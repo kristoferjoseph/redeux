@@ -92,7 +92,9 @@ module.exports = function() {
 
     var store = redeux(tasks)
     store.dispatch(action)
-    assert.deepEqual(store(), {tasks:[1,2,3]})
+    store.subscribe(function (data) {
+      assert.deepEqual(data, {tasks:[1,2,3]})
+    })
   })
 
   test('  should call listeners', function(){
@@ -120,10 +122,6 @@ module.exports = function() {
     var store = redeux(tasks)
     store.subscribe(ear)
     store.dispatch(action)
-    assert.deepEqual(
-      {tasks:[1,2,3,4]},
-      store()
-    )
   })
 
   test('  should not mutate by default', function () {
@@ -167,7 +165,9 @@ module.exports = function() {
     store.dispatch({type:'ADD', data:4})
     assert.strictEqual(state, store())
     assert.notStrictEqual(store().tasks, tasks())
-    assert.deepEqual(store().tasks, [1,2,3,4])
+    store.subscribe(function (data) {
+      assert.deepEqual(data.tasks, [1,2,3,4])
+    })
   })
 
 }()
