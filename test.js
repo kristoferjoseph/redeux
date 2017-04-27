@@ -170,4 +170,23 @@ module.exports = function() {
     assert.deepEqual(store().tasks, [1,2,3,4])
   })
 
+  test('  should batch updates', function () {
+    var count = 0
+    function one (state, action) {
+      var type = action && action.type || ''
+      var data = action && action.data
+      console.log(count++)
+      if (type === 'ADD') {
+        return data + 1
+      }
+      return state
+    }
+    var store = redeux(one)
+    store.dispatch({type: 'ADD', data: 0})
+    store.dispatch({type: 'nope', data: 0})
+    store.dispatch({type: 'uhuh', data: 0})
+    store.dispatch({type: 'no', data: 0})
+    store.dispatch({type: 'ADD', data: 0})
+  })
+
 }()

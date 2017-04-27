@@ -4,6 +4,7 @@ module.exports = function redeux () {
   var name = ''
   var initialState
   var reducers
+  var batch
 
   ('object' === typeof arguments[arguments.length - 1]) &&
   (initialState = Array.prototype.pop.call(arguments))
@@ -26,7 +27,7 @@ module.exports = function redeux () {
     return func ? func(state) : state
   }
 
-  store.subscribe = function subscribe (listener) {
+  function subscribe (listener) {
     return 'function' === typeof listener ?
       (listeners.push(listener), unsubscribe) :
       console.error('listener must be a function')
@@ -36,8 +37,27 @@ module.exports = function redeux () {
     return listeners.splice(listeners.indexOf(listener), 1)
   }
 
-  store.dispatch = function dispatch (action) {
-    var update
+  function notify () {
+    console.log('called')
+    var update = store()
+    listeners.forEach(function (l) {
+      l(update)
+    })
+  }
+
+  batch = function bounce (fn, t) {
+    var timeout
+    return function () {
+      var later = function () {
+        timeout = null
+        fn()
+      }
+      timeout && clearTimeout(timeout)
+      timeout = setTimeout(later, t)
+    }
+  }(notify, 200)
+
+  function dispatch (action) {
     action &&
     'string' !== typeof action.type &&
     console.error('action.type must be a "string"')
@@ -45,11 +65,12 @@ module.exports = function redeux () {
       name = r.name
       state[name] = r(state[name], action)
     })
-    update = store()
-    listeners.forEach(function (l) {
-      l(update)
-    })
+    batch()
   }
+
+
+  store.subscribe = subscribe
+  store.dispatch = dispatch
 
   return store
 }
