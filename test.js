@@ -172,16 +172,26 @@ module.exports = function() {
 
   test('  should batch updates', function () {
     var count = 0
-    function one (state, action) {
+    function counter (state, action) {
+      var newState = state || count
       var type = action && action.type || ''
       var data = action && action.data
-      console.log(count++)
       if (type === 'ADD') {
-        return data + 1
+        return newState + 1
       }
-      return state
+      return newState
     }
-    var store = redeux(one)
+
+    var called = false
+    function ear (state) {
+      called ?
+      assert.fail('CALLED MORE THAN ONCE!') :
+      assert.equal(state.counter, 2)
+      called = true
+    }
+
+    var store = redeux(counter)
+    store.subscribe(ear)
     store.dispatch({type: 'ADD', data: 0})
     store.dispatch({type: 'nope', data: 0})
     store.dispatch({type: 'uhuh', data: 0})

@@ -38,7 +38,6 @@ module.exports = function redeux () {
   }
 
   function notify () {
-    console.log('called')
     var update = store()
     listeners.forEach(function (l) {
       l(update)
@@ -55,7 +54,7 @@ module.exports = function redeux () {
       timeout && clearTimeout(timeout)
       timeout = setTimeout(later, t)
     }
-  }(notify, 200)
+  }(notify, 100)
 
   function dispatch (action) {
     action &&
