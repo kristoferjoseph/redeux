@@ -2,6 +2,10 @@ module.exports = function redeux () {
   var state = {}
   var listeners = []
   var name = ''
+  var queue = []
+  var raf = ('undefined' === typeof window) ?
+    setTimeout :
+    window.requestAnimationFrame
   var initialState
   var reducers
 
@@ -26,7 +30,7 @@ module.exports = function redeux () {
     return func ? func(state) : state
   }
 
-  store.subscribe = function subscribe (listener) {
+  function subscribe (listener) {
     return 'function' === typeof listener ?
       (listeners.push(listener), unsubscribe) :
       console.error('listener must be a function')
@@ -36,8 +40,8 @@ module.exports = function redeux () {
     return listeners.splice(listeners.indexOf(listener), 1)
   }
 
-  store.dispatch = function dispatch (action) {
-    var update
+  function dispatch () {
+    var action = queue.pop()
     action &&
     'string' !== typeof action.type &&
     console.error('action.type must be a "string"')
@@ -45,11 +49,22 @@ module.exports = function redeux () {
       name = r.name
       state[name] = r(state[name], action)
     })
+    queue.length ? raf(dispatch) : notify()
+  }
+
+  function notify () {
     update = store()
     listeners.forEach(function (l) {
       l(update)
     })
   }
 
+  function prequeue (action) {
+    queue.push(action)
+    raf(dispatch)
+  }
+
+  store.subscribe = subscribe
+  store.dispatch = prequeue
   return store
 }
