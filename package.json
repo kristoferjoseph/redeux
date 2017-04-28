@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node ./test.js",
     "bench": "node ./benchmark.js",
+    "bench-web": "browserify ./benchmark/index.js > ./benchmark/bundle.js && open ./benchmark/index.html",
     "umd": "browserify ./index.js --standalone redeux | uglifyjs --compress --mangle --screw-ie8 > redeux.umd.js"
   },
   "repository": {

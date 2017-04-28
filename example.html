@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>✨redeux✨</title>
+  <title>redeux</title>
   <script src="./redeux.umd.js"></script>
   <style>
     body {
       padding: 3rem;
       font-family: sans-serif;
-      text-align: center;
     }
   </style>
 </head>
@@ -16,13 +15,17 @@
   <div id="root"></div>
   <script>
     (function(){
-       var root = document.getElementById('root')
-       store = window.redeux(todos)
-       function todos(state, action) {
-         return ['✨redeux✨']
-       }
-       console.log(store())
-       root.innerHTML = `<h1>${store().todos[0]}</h1>`
+      var root = document.getElementById('root')
+      store = window.redeux(todos)
+      function todos(state, action) {
+        return ['redeux']
+      }
+      console.log(':::  STATE :::\n', store())
+      root.innerHTML = `
+        <div>
+          <h1>${store().todos[0]}</h1>
+          <p>open the console</p>
+        </div>`
      }())
   </script>
 </body>

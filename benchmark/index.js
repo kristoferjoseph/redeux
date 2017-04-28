@@ -1,7 +1,8 @@
 var records = Array(10000).fill('yolo', 0, 10000)
-var store = require('./')(todos, {todos:records})
+var store = require('../')(todos, {todos:records})
 var i = 10000
-var unsubscribe
+var unsubscribe = store.subscribe(update)
+var UPDATE = 'update'
 
 function todos (state, action) {
   state = state || []
@@ -19,13 +20,10 @@ function todos (state, action) {
 }
 
 function update (state) {
-  // Switch wich read is commented out
-  //  and run `node benchmark.js` again to see the difference in performance
-  var data = store()
-  //var data = store(function (s) { return Object.assign(s)})
+  console.log(':::  STATE :::\n', store())
+  unsubscribe(update)
+  console.timeEnd('update')
 }
-
-unsubscribe = store.subscribe(update)
 
 console.time('update')
 
@@ -33,9 +31,3 @@ while (i > 1) {
   i--
   store.dispatch({type: 'UPDATE'})
 }
-
-console.log(':::  STATE :::\n', store())
-
-unsubscribe(update)
-
-console.timeEnd('update')
