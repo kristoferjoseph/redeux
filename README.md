@@ -1,4 +1,4 @@
-# ✨redeux✨
+# redeux
 Minimal unidirectional data flow utility library.
 
 - Written in plain 'ol JavaScript so **no transpile needed**⚡️
@@ -7,6 +7,12 @@ Minimal unidirectional data flow utility library.
 - Simple api of three methods:
     - subscribe/unsubscribe
     - dispatch
+
+## Example
+
+✅ [Obligatory todo app example](http://kristoferjoseph.com/redeux-todos/)
+
+[source code](https://github.com/kristoferjoseph/redeux-todos)
 
 ## Install
 
