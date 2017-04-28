@@ -39,7 +39,7 @@ module.exports = function redeux () {
   var listeners = []
   var name = ''
   var queue = []
-  var raf = ('undefined' === typeof window) ?
+  var raf = 'undefined' === typeof window ?
     setTimeout :
     window.requestAnimationFrame
   var initialState
@@ -89,7 +89,7 @@ module.exports = function redeux () {
   }
 
   function notify () {
-    update = store()
+    var update = store()
     listeners.forEach(function (l) {
       l(update)
     })
