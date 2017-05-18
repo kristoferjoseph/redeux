@@ -10,7 +10,7 @@ Minimal unidirectional data flow utility library.
 
 ## Example
 
-✅ [Obligatory todo app example](http://kristoferjoseph.com/redeux-todos/)
+✅ [Obligatory todo app example](https://kristoferjoseph.com/redeux-todos/)
 
 [source code](https://github.com/kristoferjoseph/redeux-todos)
 
