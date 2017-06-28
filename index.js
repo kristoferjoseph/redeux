@@ -18,9 +18,9 @@ module.exports = function redeux () {
       if (r) {
         name = r.name
         return initialState ?
-          (initialState.hasOwnProperty(name) ||
-          console.warn('initialState.' + name + ' is missing.'),
-          state[name] = r(initialState[name])) :
+          initialState.hasOwnProperty(name) ?
+            state[name] = r(initialState[name]) :
+            console.warn('initialState.' + name + ' is missing.') :
           state[name] = r(), r
       }
     }
@@ -42,14 +42,13 @@ module.exports = function redeux () {
 
   function dispatch () {
     var action = queue.pop()
-    action &&
-    'string' !== typeof action.type &&
-    console.error('action.type must be a "string"')
-    reducers.forEach(function (r) {
-      name = r.name
-      state[name] = r(state[name], action)
-    })
-    queue.length ? raf(dispatch) : notify()
+    if (action) {
+      reducers.forEach(function (r) {
+        name = r.name
+        state[name] = r(state[name], action)
+      })
+      queue.length ? raf(dispatch) : notify()
+    }
   }
 
   function notify () {
