@@ -30,5 +30,7 @@
     "browserify": "^13.0.1",
     "uglify-js": "^2.7.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "in-window": "^2.0.0"
+  }
 }

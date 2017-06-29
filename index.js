@@ -1,11 +1,16 @@
+var inWindow = require('in-window')
 module.exports = function redeux () {
   var state = {}
   var listeners = []
   var name = ''
   var queue = []
-  var raf = 'undefined' === typeof window ?
-    setTimeout :
-    window.requestAnimationFrame
+  var raf = inWindow ?
+    window.requestAnimationFrame :
+    setTimeout
+  var caf = inWindow ?
+    window.cancelAnimationFrame :
+    clearTimeout
+  var tID
   var initialState
   var reducers
 
@@ -41,13 +46,13 @@ module.exports = function redeux () {
 
   function dispatch () {
     var action = queue.pop()
-    if (action) {
-      reducers.forEach(function (r) {
-        name = r.name
-        state[name] = r(state[name], action)
-      })
-      queue.length ? raf(dispatch) : notify()
-    }
+    reducers.forEach(function (r) {
+      name = r.name
+      state[name] = r(state[name], action)
+    })
+    queue.length ?
+    (caf(tID), tID = raf(dispatch)) :
+    notify()
   }
 
   function notify () {
@@ -59,7 +64,7 @@ module.exports = function redeux () {
 
   function prequeue (action) {
     queue.push(action)
-    raf(dispatch)
+    tID = raf(dispatch)
   }
 
   store.subscribe = subscribe
