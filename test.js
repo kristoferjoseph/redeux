@@ -34,15 +34,15 @@ module.exports = function() {
 
   test('  should be the combination of many reducers', function() {
     function app() {
-      return {}
+      return { name: 'My app' }
     }
     function tasks() {
-      return []
+      return { active: [1,2,3] }
     }
 
     assert.deepEqual(
       redeux(tasks, app)(),
-      {app:{},tasks:[]}
+      {app:{ name: 'My app' },tasks: { active: [1,2,3] } }
     )
   })
 
@@ -57,6 +57,22 @@ module.exports = function() {
     assert.deepEqual(
       redeux(tasks, app, {tasks:[1,2,3],app:{}})(),
       {app:{},tasks:[1,2,3]}
+    )
+  })
+
+  test('  should populate with initial state from reducers', function() {
+
+    function app(state, action) {
+      return state || { name: 'My App' }
+    }
+
+    function tasks(state, action) {
+      return state || { active: ['a','b','c'] }
+    }
+
+    assert.deepEqual(
+      redeux( tasks, app, { app: { name: 'Fwee' } })(),
+      { tasks: { active: ['a','b','c'] }, app: { name: 'Fwee' } }
     )
   })
 

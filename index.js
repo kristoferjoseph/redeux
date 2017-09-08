@@ -14,7 +14,7 @@ module.exports = function redeux () {
   var initialState
   var reducers
 
-  ('object' === typeof arguments[arguments.length - 1]) &&
+  ('function' !== typeof arguments[arguments.length - 1]) &&
   (initialState = Array.prototype.pop.call(arguments))
 
   reducers = Array.prototype.map.call(
@@ -22,16 +22,14 @@ module.exports = function redeux () {
     function (r) {
       if (r) {
         name = r.name
-        return initialState ?
-          initialState.hasOwnProperty(name) &&
-          (state[name] = r(initialState[name])) :
-          state[name] = r(), r
+        state[name] = r(initialState && initialState[name])
+        return r
       }
     }
   )
 
-  function store (func) {
-    return func ? func(state) : state
+  function store (fn) {
+    return fn ? fn(state) : state
   }
 
   function subscribe (listener) {
