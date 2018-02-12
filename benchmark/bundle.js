@@ -1,75 +1,73 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var records = Array(10000).fill('yolo', 0, 10000)
-var store = require('../')(todos, {todos:records})
+(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 var i = 10000
-var unsubscribe = store.subscribe(update)
-var UPDATE = 'update'
-
-function todos (state, action) {
-  state = state || []
-  action = action || {}
-  var type = action.type || ''
-  var data = action.data
-  var l = state.length
-  var newState
-  if (type === 'UPDATE') {
-    newState = state.slice()
-    newState[Math.floor(Math.random() * l)] = 'holla'
-    return newState
-  }
-  return state
-}
+var store = require('../')({todos: ['initial state']})
+var todos = require('./todos')
+store.register(todos)
+store.subscribe(update)
+console.log('START', store())
 
 function update (state) {
-  console.log(':::  STATE :::\n', store())
-  unsubscribe(update)
-  console.timeEnd('update')
+  console.log(state)
 }
 
 console.time('update')
-
 while (i > 1) {
   i--
-  store.dispatch({type: 'UPDATE'})
+  store.dispatch({type: 'UPDATE', data: i})
 }
 
-},{"../":2}],2:[function(require,module,exports){
-module.exports = function redeux () {
-  var state = {}
+store.unsubscribe(update)
+console.log('END', store())
+console.timeEnd('update')
+
+},{"../":3,"./todos":2}],2:[function(require,module,exports){
+var initialState = []
+module.exports = function todos (state, action) {
+  state = state || initialState
+  action = action || {}
+  var type = action.type
+  var data = action.data
+  switch (type) {
+    case 'UPDATE':
+      var newState = state.concat()
+      newState.push(data)
+      return newState
+    default:
+      return state
+  }
+}
+
+},{}],3:[function(require,module,exports){
+var inWindow = typeof window !== 'undefined'
+var set = inWindow
+  ? window.requestAnimationFrame
+  : setTimeout
+var cancel = inWindow
+  ? window.cancelAnimationFrame
+  : clearTimeout
+var timeout
+
+module.exports = function Redeux (initialState) {
+  var state = initialState || {}
+  var reducers = []
   var listeners = []
-  var name = ''
-  var queue = []
-  var raf = 'undefined' === typeof window ?
-    setTimeout :
-    window.requestAnimationFrame
-  var initialState
-  var reducers
+  var actions = []
 
-  ('object' === typeof arguments[arguments.length - 1]) &&
-  (initialState = Array.prototype.pop.call(arguments))
-
-  reducers = Array.prototype.map.call(
-    arguments,
-    function (r) {
-      if (r) {
-        name = r.name
-        return initialState ?
-          (initialState.hasOwnProperty(name) ||
-          console.warn('initialState.' + name + ' is missing.'),
-          state[name] = r(initialState[name])) :
-          state[name] = r(), r
-      }
+  function register () {
+    var args = arguments
+    var l = args.length
+    var i = 0
+    var r
+    for (i; i < l; i++) {
+      r = args[i]
+      typeof r === 'function' &&
+        reducers.push(r)
     }
-  )
-
-  function store (func) {
-    return func ? func(state) : state
   }
 
   function subscribe (listener) {
-    return 'function' === typeof listener ?
-      (listeners.push(listener), unsubscribe) :
-      console.error('listener must be a function')
+    return typeof listener === 'function' &&
+      listeners.push(listener)
   }
 
   function unsubscribe (listener) {
@@ -77,31 +75,52 @@ module.exports = function redeux () {
   }
 
   function dispatch () {
-    var action = queue.pop()
-    action &&
-    'string' !== typeof action.type &&
-    console.error('action.type must be a "string"')
-    reducers.forEach(function (r) {
-      name = r.name
-      state[name] = r(state[name], action)
-    })
-    queue.length ? raf(dispatch) : notify()
+    var action = actions.pop()
+    reduce(action)
+    if (actions.length) {
+      cancel(timeout)
+      timeout = set(dispatch)
+    } else {
+      notify()
+    }
   }
 
   function notify () {
-    var update = store()
-    listeners.forEach(function (l) {
-      l(update)
-    })
+    var i = 0
+    var l = listeners.length
+    for (i; i < l; i++) {
+      listeners[i](state)
+    }
   }
 
-  function prequeue (action) {
-    queue.push(action)
-    raf(dispatch)
+  function queue (action) {
+    actions.push(action)
+    timeout = set(dispatch)
+  }
+
+  function reduce (action) {
+    var i = 0
+    var l = reducers.length
+    var r
+    var key
+    for (i; i < l; i++) {
+      r = reducers[i]
+      key = r.key || r.name
+      state[key] = r(state[key], action)
+    }
+    return state
+  }
+
+  function store (fn) {
+    return fn
+      ? fn(reduce())
+      : reduce()
   }
 
   store.subscribe = subscribe
-  store.dispatch = prequeue
+  store.unsubscribe = unsubscribe
+  store.register = register
+  store.dispatch = queue
   return store
 }
 

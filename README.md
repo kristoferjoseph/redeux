@@ -4,9 +4,17 @@ Minimal unidirectional data flow utility library.
 - Written in plain 'ol JavaScript so **no transpile needed**⚡️
 - Tiny💥
     - [~1k](https://github.com/kristoferjoseph/redeux/blob/master/index.js)
-- Simple api of three methods:
-    - subscribe/unsubscribe
-    - dispatch
+- Simple api:
+    - **store**
+      - returns the current state
+        - **store.register**
+          - register any number of reducers
+        - **store.subscribe**
+          - subscribe a function to receive state updates
+        - **store.unsubscribe**
+          - unsubscribe a function from state updated
+        - **store.dispatch**
+          - dispatch an action
 
 ## Example
 
@@ -28,10 +36,12 @@ Minimal unidirectional data flow utility library.
 
 ```js
 var createStore = require('redeux')
-var store = createStore(todos)
+var store = createStore()
+store.register(todos)
 
-function todos() {
-  return []
+function todos(state, action) {
+  state = state || []
+  return state.concat()
 }
 
 console.log(store()) // { todos: [] }

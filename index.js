@@ -1,41 +1,33 @@
-var inWindow = require('in-window')
-module.exports = function redeux () {
-  var state = {}
+var inWindow = typeof window !== 'undefined'
+var set = inWindow
+  ? window.requestAnimationFrame
+  : setTimeout
+var cancel = inWindow
+  ? window.cancelAnimationFrame
+  : clearTimeout
+var timeout
+
+module.exports = function Redeux (initialState) {
+  var state = initialState || {}
+  var reducers = []
   var listeners = []
-  var name = ''
-  var queue = []
-  var raf = inWindow ?
-    window.requestAnimationFrame :
-    setTimeout
-  var caf = inWindow ?
-    window.cancelAnimationFrame :
-    clearTimeout
-  var tID
-  var initialState
-  var reducers
+  var actions = []
 
-  ('function' !== typeof arguments[arguments.length - 1]) &&
-  (initialState = Array.prototype.pop.call(arguments))
-
-  reducers = Array.prototype.map.call(
-    arguments,
-    function (r) {
-      if (r) {
-        name = r.name
-        state[name] = r(initialState && initialState[name])
-        return r
-      }
+  function register () {
+    var args = arguments
+    var l = args.length
+    var i = 0
+    var r
+    for (i; i < l; i++) {
+      r = args[i]
+      typeof r === 'function' &&
+        reducers.push(r)
     }
-  )
-
-  function store (fn) {
-    return fn ? fn(state) : state
   }
 
   function subscribe (listener) {
-    return 'function' === typeof listener ?
-      (listeners.push(listener), unsubscribe) :
-      console.error('listener must be a function')
+    return typeof listener === 'function' &&
+      listeners.push(listener)
   }
 
   function unsubscribe (listener) {
@@ -43,29 +35,51 @@ module.exports = function redeux () {
   }
 
   function dispatch () {
-    var action = queue.pop()
-    reducers.forEach(function (r) {
-      name = r.name
-      state[name] = r(state[name], action)
-    })
-    queue.length ?
-    (caf(tID), tID = raf(dispatch)) :
-    notify()
+    var action = actions.pop()
+    reduce(action)
+    if (actions.length) {
+      cancel(timeout)
+      timeout = set(dispatch)
+    } else {
+      notify()
+    }
   }
 
   function notify () {
-    var update = store()
-    listeners.forEach(function (l) {
-      l(update)
-    })
+    var i = 0
+    var l = listeners.length
+    for (i; i < l; i++) {
+      listeners[i](state)
+    }
   }
 
-  function prequeue (action) {
-    queue.push(action)
-    tID = raf(dispatch)
+  function queue (action) {
+    actions.push(action)
+    timeout = set(dispatch)
+  }
+
+  function reduce (action) {
+    var i = 0
+    var l = reducers.length
+    var r
+    var key
+    for (i; i < l; i++) {
+      r = reducers[i]
+      key = r.key || r.name
+      state[key] = r(state[key], action)
+    }
+    return state
+  }
+
+  function store (fn) {
+    return fn
+      ? fn(reduce())
+      : reduce()
   }
 
   store.subscribe = subscribe
-  store.dispatch = prequeue
+  store.unsubscribe = unsubscribe
+  store.register = register
+  store.dispatch = queue
   return store
 }

@@ -4,10 +4,13 @@
   "description": "Minimal unidirectional data flow utility",
   "main": "index.js",
   "scripts": {
-    "test": "node ./test.js",
-    "bench": "node ./benchmark/index.js",
-    "bench-web": "browserify ./benchmark/index.js > ./benchmark/bundle.js && open ./benchmark/index.html",
-    "umd": "browserify ./index.js --standalone redeux | uglifyjs --compress --mangle --screw-ie8 > redeux.umd.js"
+    "test": "npm run test:node && npm run test:browser",
+    "test:node": "tape ./test.js | tap-spec",
+    "test:browser": "browserify ./test.js | tape-run --render=tap-spec",
+    "benchmark": "npm run benchmark:node && npm run benchmark:web",
+    "benchmark:node": "node ./benchmark/index.js",
+    "benchmark:web": "browserify ./benchmark/index.js > ./benchmark/bundle.js && open ./benchmark/index.html",
+    "umd": "browserify ./index.js --standalone redeux | uglifyjs --compress --mangle > redeux.umd.js"
   },
   "repository": {
     "type": "git",
@@ -27,10 +30,11 @@
   },
   "homepage": "https://github.com/kristoferjoseph/redeux#readme",
   "devDependencies": {
-    "browserify": "^13.0.1",
-    "uglify-js": "^2.7.0"
-  },
-  "dependencies": {
-    "in-window": "^2.0.0"
+    "browserify": "^16.0.0",
+    "standard": "*",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.8.0",
+    "tape-run": "^3.0.3",
+    "uglify-js": "^3.3.10"
   }
 }
