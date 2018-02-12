@@ -51,18 +51,20 @@ console.log(store()) // { todos: [] }
 
 ```js
 var createStore = require('redeux')
-var counter = 0
-var initialState = {todos: [counter]}
-var store = createStore(todos, initialState)
-var unsubscribe = store.subscribe(update)
-
+var initialState = {todos: [0]}
+var store = createStore(initialState)
+store.register(todos)
+store.subscribe(update)
 store.dispatch({type:'add'})
-unsubscribe(update)
+store.unsubscribe(update)
 
 function todos(state, action) {
-  var type = action && action.type
+  state = state || [0]
+  action = action || {}
+  var type = action.type
   if (type === 'add') {
-    state.push(counter + 1)
+    state = state.concat()
+    state.push(state[state.length-1] + 1)
   }
 
   return state
