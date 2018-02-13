@@ -12,15 +12,9 @@ Minimal unidirectional data flow utility library.
         - **store.subscribe**
           - subscribe a function to receive state updates
         - **store.unsubscribe**
-          - unsubscribe a function from state updated
+          - unsubscribe a function from state updates
         - **store.dispatch**
           - dispatch an action
-
-## Example
-
-✅ [Obligatory todo app example](https://kristoferjoseph.com/redeux-todos/)
-
-[source code](https://github.com/kristoferjoseph/redeux-todos)
 
 ## Install
 
@@ -32,46 +26,92 @@ Minimal unidirectional data flow utility library.
 
 ## Usage
 
-#### Simplest working example
+#### reducer
+
+this is what a reducer looks like
 
 ```js
-var createStore = require('redeux')
-var store = createStore()
-store.register(todos)
 
-function todos(state, action) {
-  state = state || []
-  return state.concat()
+// State machine lib
+var switcher = require('hash-switch')
+
+// Default state
+var initialState = []
+
+// Create a state machine
+var stateMachine = switcher({
+  // Each action type maps to a function for changing data
+  'ADD': add
+},
+// If no constant match is found we just return the current state
+function (state) {
+  return state
+})
+
+// By defualt the reducer function's name
+//  will be used as the key for the data atom
+module.exports = function todos (state, action) {
+  // Guard against undefined action
+  action = action || {}
+
+  // You can use whatever keys you like in your actions,
+  //  but i find a type and data works best for me
+  var type = action.type
+  var data = action.data
+
+  // Guard against undefined state
+  //  by initializing with initial state
+  state = state || initialState
+
+  // Call the state machine with the action type constant, the current state, and the action data.
+  return stateMachine(type, state, data)
+}
+
+// The add function will get passed the current state and the action data
+function add (state, data) {
+  // Make a copy of the array
+  var newState = state.concat()
+
+  // Change the copy
+  newState.push(data)
+
+  // Return the changed copy
+  return newState
 }
 
 console.log(store()) // { todos: [] }
 ```
 
-#### Subscribing to updates
+#### Registering a reducer
 
 ```js
-var createStore = require('redeux')
+var todos = require('./reducers/todos')
+var initialState = {todos: [1,2,3]}
+var store = require('redeux')(initialState)
+// You can pass as many reducers as you want to register
+store.register(todos)
+```
+
+#### Dispatching an action
+
+```js
+var store = require('redeux')()
+store.dispatch({type: 'ADD', data: '1'})
+```
+
+#### Subscribing a listener
+
+```js
 var initialState = {todos: [0]}
-var store = createStore(initialState)
+var store = require('redeux')(initialState)
+var todos = require('./reducers/todos')
 store.register(todos)
 store.subscribe(update)
-store.dispatch({type:'add'})
+store.dispatch({type:'ADD', data: 1})
 store.unsubscribe(update)
 
-function todos(state, action) {
-  state = state || [0]
-  action = action || {}
-  var type = action.type
-  if (type === 'add') {
-    state = state.concat()
-    state.push(state[state.length-1] + 1)
-  }
-
-  return state
-}
-
-function update(state) {
-  console.log(state) // {todos[0,1]}
+function update(state, action) {
+  console.log(state) // {todos[0, 1]}
 }
 ```
 
