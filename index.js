@@ -23,6 +23,7 @@ module.exports = function Redeux (initialState) {
       typeof r === 'function' &&
         reducers.push(r)
     }
+    return reducers.length
   }
 
   function subscribe (listener) {
