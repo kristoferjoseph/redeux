@@ -18,10 +18,15 @@ module.exports = function Redeux (initialState) {
     var l = args.length
     var i = 0
     var r
+    var key
     for (i; i < l; i++) {
       r = args[i]
-      typeof r === 'function' &&
+      key = r.key || r.name
+      if (typeof r === 'function') {
         reducers.push(r)
+        state[key] = r(state[key])
+        reducers.push(r)
+      }
     }
     return reducers.length
   }

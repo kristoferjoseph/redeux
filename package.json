@@ -4,13 +4,18 @@
   "description": "Minimal unidirectional data flow utility",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:node && npm run test:browser",
-    "test:node": "tape ./test.js | tap-spec",
-    "test:browser": "browserify ./test.js | tape-run --render=tap-spec",
+    "test": "standard && npm run test:node && npm run test:browser",
+    "test:node": "tape ./test.js | tap-format-spec",
+    "test:browser": "browserify ./test.js | tape-run | tap-format-spec",
     "benchmark": "npm run benchmark:node && npm run benchmark:web",
     "benchmark:node": "node ./benchmark/index.js",
     "benchmark:web": "browserify ./benchmark/index.js > ./benchmark/bundle.js && open ./benchmark/index.html",
     "umd": "browserify ./index.js --standalone redeux | uglifyjs --compress --mangle > redeux.umd.js"
+  },
+  "standard": {
+    "ignore": [
+      "*.umd.js"
+    ]
   },
   "repository": {
     "type": "git",
@@ -30,9 +35,9 @@
   },
   "homepage": "https://github.com/kristoferjoseph/redeux#readme",
   "devDependencies": {
+    "@tap-format/spec": "^0.2.0",
     "browserify": "^16.0.0",
     "standard": "*",
-    "tap-spec": "^4.1.1",
     "tape": "^4.8.0",
     "tape-run": "^3.0.3",
     "uglify-js": "^3.3.10"

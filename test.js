@@ -1,7 +1,7 @@
 var test = require('tape')
 var Store = require('./')
 
-test('Redeux', t => {
+test('Store', t => {
   test('should exits', t => {
     t.ok(Store, 'exists')
     t.end()
@@ -48,30 +48,31 @@ test('Redeux', t => {
       })
       t.test('should register reducer', t => {
         function a (state, action) {
-          console.log('ACTION', action)
           t.ok(true, 'registered a reducer')
           t.end()
         }
+        a.key = 'a'
         store.register(a)
-        store.dispatch('DISPATCHED')
       })
       t.test('should register multiple reducers', t => {
         t.plan(3)
         var store = Store()
         function d (state, action) {
-          console.log('REDUCER 1', action)
+          console.log('REDUCER 1')
           t.ok(true, 'called')
         }
+        d.key = 'd'
         function e (state, action) {
-          console.log('REDUCER 2', action)
+          console.log('REDUCER 2')
           t.ok(true, 'called')
         }
+        e.key = 'e'
         function f (state, action) {
-          console.log('REDUCER 3', action)
+          console.log('REDUCER 3')
           t.ok(true, 'called')
         }
+        f.key = 'f'
         store.register(d, e, f)
-        store.dispatch('DISPATCHED')
       })
       t.test('should be able to dispatch action', t => {
         var store = Store({
@@ -89,6 +90,7 @@ test('Redeux', t => {
             return 4
           }
         }
+        b.key = 'b'
         store.register(b)
         store.subscribe(l)
         store.dispatch('NOTIFY')
@@ -99,23 +101,49 @@ test('Redeux', t => {
         function a (state, action) {
           return 1
         }
+        a.key = 'a'
         function b (state, action) {
           return 2
         }
+        b.key = 'b'
         store.register(a, b)
         t.deepEqual(store(), {a: 1, b: 2}, 'returns default state')
         t.end()
       })
       t.test('should accept initialState', t => {
         var store = Store({
-          a: 1,
-          b: 2
+          a: {
+            active: [1, 2, 3]
+          },
+          b: {
+            cursor: {
+              id: 'yolo'
+            }
+          }
         })
-        t.deepEqual(store(), {a: 1, b: 2}, 'Populated with initialState')
+        function a (state, action) {
+          state = state || { active: [] }
+          return state
+        }
+        a.key = 'a'
+        function b (state, action) {
+          state = state || { cursor: {} }
+          return state
+        }
+        b.key = 'b'
+        store.register(a, b)
+        t.deepEqual(store(), {
+          a: {
+            active: [1, 2, 3]
+          },
+          b: {
+            cursor: {
+              id: 'yolo'
+            }
+          } }, 'Populated with initialState')
         t.end()
       })
     })
   })
-
   t.end()
 })
