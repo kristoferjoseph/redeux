@@ -23,7 +23,6 @@ module.exports = function Redeux (initialState) {
       r = args[i]
       key = r.key || r.name
       if (typeof r === 'function') {
-        reducers.push(r)
         state[key] = r(state[key])
         reducers.push(r)
       }
