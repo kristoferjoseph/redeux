@@ -39,7 +39,7 @@
     "browserify": "^16.0.0",
     "standard": "*",
     "tape": "^4.8.0",
-    "tape-run": "^3.0.3",
+    "tape-run": "^4.0.0",
     "uglify-js": "^3.3.10"
   }
 }
