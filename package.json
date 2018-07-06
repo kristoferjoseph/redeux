@@ -3,6 +3,8 @@
   "version": "5.0.4",
   "description": "Minimal unidirectional data flow utility",
   "main": "index.js",
+  "umd": "redeux.umd.js",
+  "module": "redeux.mjs",
   "scripts": {
     "test": "standard && npm run test:node && npm run test:browser",
     "test:node": "tape ./test.js | tap-format-spec",
@@ -36,10 +38,10 @@
   "homepage": "https://github.com/kristoferjoseph/redeux#readme",
   "devDependencies": {
     "@tap-format/spec": "^0.2.0",
-    "browserify": "^16.0.0",
-    "standard": "*",
-    "tape": "^4.8.0",
+    "browserify": "^16.2.2",
+    "standard": "^11.0.1",
+    "tape": "^4.9.1",
     "tape-run": "^4.0.0",
-    "uglify-js": "^3.3.10"
+    "uglify-js": "^3.4.3"
   }
 }
