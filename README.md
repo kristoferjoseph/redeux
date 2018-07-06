@@ -18,11 +18,17 @@ Minimal unidirectional data flow utility library.
 
 ## Install
 
+##### node
+
 `npm i redeux --save`
 
-##### OR
+##### script
 
 [`<script src="redeux.umd.js"></script>`](https://github.com/kristoferjoseph/redeux/blob/master/example.html)
+
+##### es module
+
+`import Redeux from 'https://unpkg.com/redeux?module'`
 
 ## Usage
 
@@ -31,25 +37,13 @@ Minimal unidirectional data flow utility library.
 this is what a reducer looks like
 
 ```js
-
-// State machine lib
-var switcher = require('hash-switch')
-
 // Default state
 var initialState = []
 
-// Create a state machine
-var stateMachine = switcher({
-  // Each action type maps to a function for changing data
-  'ADD': add
-},
-// If no constant match is found we just return the current state
-function (state) {
-  return state
-})
-
-// By defualt the reducer function's name
+// By defualt the reducer function's name property
 //  will be used as the key for the data atom
+//  NOTE: You can also add the `key` property to your reducer function
+//  i.e.: `todos.key = todos` useful for when you want to use uglify and mangle is changing function names.
 module.exports = function todos (state, action) {
   // Guard against undefined action
   action = action || {}
@@ -63,8 +57,13 @@ module.exports = function todos (state, action) {
   //  by initializing with initial state
   state = state || initialState
 
-  // Call the state machine with the action type constant, the current state, and the action data.
-  return stateMachine(type, state, data)
+  switch (type) {
+    case 'ADD':
+      return add(state, data)
+      break;
+    default:
+      return state;
+  }
 }
 
 // The add function will get passed the current state and the action data
